@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import './Login.css';
 import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -15,7 +14,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import axios from "axios"
-import { useNavigate } from 'react-router-dom';
+
 
 
 const theme = createTheme();
@@ -23,20 +22,25 @@ const theme = createTheme();
 // TODO - remove
 // https://mui.com/material-ui/getting-started/templates/
 
-export default function Login({ setToken }) {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const navigate = useNavigate();
+export default function ForgotPassword({ setToken }) {
+    const [email, setEmail] = useState();
+    const [isMailSend, setIsMailSend] = useState(false);
+
 
 
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const access_token = await axios.post(`http://localhost:5000/auth/login`, { username, password })
-            .then(function (response) { console.log(response); return response.data['access_token'] })
-            .catch(function (error) { console.log(error); });
-        setToken(access_token);
-        navigate("/profile")
+        // const access_token = await axios.post(`http://localhost:5000/auth/forgot_password`, { email })
+        //     .then(function (response) { console.log(response); })
+        //     .catch(function (error) { console.log(error); });
+        // setToken(access_token);
+        setIsMailSend(true)
+    }
+
+    function handleChange(e) {
+        setEmail(e.target.value)
+        setIsMailSend(false)
     }
 
     function Copyright(props) {
@@ -51,6 +55,8 @@ export default function Login({ setToken }) {
 
     return (
         <ThemeProvider theme={theme}>
+            {isMailSend && alert("Email sent, please check your inbox to confirm")}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -75,40 +81,29 @@ export default function Login({ setToken }) {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
+                            // flexFlow: 'row nowrap',
+                            // justifyContent: 'center',
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            Forgot Password
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
+                                style={{ width: 600 }}
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                autoComplete="username"
+                                id="email"
+                                label="Email"
+                                name="email"
+                                autoComplete="email"
                                 autoFocus
-                                onChange={e => setUserName(e.target.value)}
-                            />
-                            <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={e => setPassword(e.target.value)}
-                            />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
+
+                                onChange={e => handleChange(e)}
                             />
                             <Button
                                 type="submit"
@@ -116,29 +111,26 @@ export default function Login({ setToken }) {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Sign In
+
+                                Confirm Email
                             </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="./ForgotPassword" variant="body2" className='text-link'>
-                                        Forgot password
-                                    </Link>
-                                </Grid>
+                            <Grid container justifyContent="flex-end">
                                 <Grid item>
-                                    <Link href={"./SignUp"} variant="body2">
-                                        {"Don't have an account? Sign Up"}
+                                    <Link href="./" variant="body2">
+                                        back to login
                                     </Link>
                                 </Grid>
                             </Grid>
+
                             <Copyright sx={{ mt: 5 }} />
                         </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </ThemeProvider>
+                    </Box >
+                </Grid >
+            </Grid >
+        </ThemeProvider >
     );
 }
 
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+// Login.propTypes = {
+//     setToken: PropTypes.func.isRequired
+// }
