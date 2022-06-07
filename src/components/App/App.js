@@ -6,6 +6,9 @@ import Login from '../Login/Login';
 import useToken from './useToken';
 import Profile from '../Profile/Profile';
 import SignUp from '../SingUp/SignUp';
+import { Movie } from '@mui/icons-material';
+import MoviesList from '../Movies/MoviesList';
+import Example from '../Movies/Movies';
 
 
 function App() {
@@ -29,8 +32,9 @@ function App() {
             <Route exact path="/profile" element={<Profile token={token} />}></Route>
             <Route exact path="/signup" element={<SignUp token={token} />}></Route>
             <Route exact path="/logout" element={<Logout token={removeToken} />}></Route>
-
-
+            {/* <Route exact path="/movies" element={<Movie token={token} />}></Route> */}
+            <Route exact path="/moviesList" element={<MoviesList token={token} />}></Route>
+            <Route exact path='/watchMovie' element={<Example token={token} />}></Route>
           </Routes>
         </>
         {/* )} */}
