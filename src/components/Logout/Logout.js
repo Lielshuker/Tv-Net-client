@@ -1,10 +1,8 @@
-import logo from '../../logo.svg'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 
 function Logout(props) {
-
     const navigate = useNavigate();
 
     function HandelLogout() {
@@ -23,12 +21,10 @@ function Logout(props) {
 
     return (
         <header className="App-header">
-            {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <button onClick={HandelLogout} href='/login'>
                 Logout
             </button>
         </header>
     )
 }
-
 export default Logout;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -9,33 +8,24 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import axios from "axios"
-
+import { useNavigate } from 'react-router-dom';
 
 
 const theme = createTheme();
-
-// TODO - remove
-// https://mui.com/material-ui/getting-started/templates/
-
-export default function ForgotPassword({ setToken }) {
+export default function ForgotPassword() {
     const [email, setEmail] = useState();
     const [isMailSend, setIsMailSend] = useState(false);
-
-
+    const navigate = useNavigate();
 
 
     const handleSubmit = async e => {
         e.preventDefault();
-        // const access_token = await axios.post(`http://localhost:5000/auth/forgot_password`, { email })
-        //     .then(function (response) { console.log(response); })
-        //     .catch(function (error) { console.log(error); });
-        // setToken(access_token);
-        setIsMailSend(true)
+        await axios.get(`http://localhost:5000/auth/forgot_password`, { params: { email: email } })
+            .then(function (response) { console.log(response); setIsMailSend(true); navigate("/"); })
+            .catch(function (error) { console.log(error); });
     }
 
     function handleChange(e) {
@@ -80,9 +70,7 @@ export default function ForgotPassword({ setToken }) {
                             mx: 4,
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
-                            // flexFlow: 'row nowrap',
-                            // justifyContent: 'center',
+                            alignItems: 'center'
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -93,7 +81,6 @@ export default function ForgotPassword({ setToken }) {
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
-                                style={{ width: 600 }}
                                 margin="normal"
                                 required
                                 fullWidth

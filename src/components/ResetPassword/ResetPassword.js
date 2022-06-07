@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -13,26 +12,62 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 
 const theme = createTheme();
 
-export default function Login({ setToken }) {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const [error, setError] = useState(null);
+export default function ResetPassword() {
+    const [username, setUsername] = useState();
+    const [newPassword, setNewPassword] = useState();
+    const [verifyPassword, setVerifyPassword] = useState(false);
     const navigate = useNavigate();
 
+    const { token } = useParams();
+
+    let state = { open: false, username_error_text: null, password_error_text: null, password_match_error_text: null, disabled: true };
+    let validation_key = validation()
+    let username_error = validation_key.username_error_text
+    let password_error = validation_key.password_error_text
+    let password_match_error = validation_key.password_match_error_text
 
     const handleSubmit = async e => {
+        debugger;
         e.preventDefault();
-        const access_token = await axios.post(`http://localhost:5000/auth/login`, { username, password })
-            .then(function (response) { console.log(response); return response.data['access_token'] })
-            .catch(function (error) {
-                console.log(error); setError('Invalid Username or Password')
-            });
-        setToken(access_token);
-        navigate("/profile")
+        if (!state.password_error_text && !state.username_error_text && !state.password_match_error_text) {
+            await axios.get(`http://localhost:5000/auth/reset/${token}`, { params: { username, password: newPassword } })
+                .then(function (response) { console.log(response); navigate("/"); })
+                .catch(function (error) { console.log(error); });
+        }
+
+    }
+
+    function validation() {
+        if (username === "" || !username) {
+            state.username_error_text = null
+
+        } else {
+            if (username.length <= 6) {
+                state.username_error_text = "please enter valid username"
+            }
+        }
+
+        if (newPassword === "" || !newPassword) {
+            state.password_error_text = null
+        } else {
+            if (newPassword.length >= 6) {
+                state.password_error_text = null
+                if (newPassword === "" || !newPassword) {
+                    state.password_match_error_text = null
+                } else if (newPassword !== verifyPassword) {
+                    state.password_match_error_text = "Password didn't match, try again"
+                }
+            } else {
+                state.password_error_text = "Your password must be at least 6 characters"
+            }
+        }
+
+        return state
     }
 
     function Copyright(props) {
@@ -43,14 +78,6 @@ export default function Login({ setToken }) {
                 {'.'}
             </Typography>
         );
-    }
-    function handleChangePassword(e) {
-        setPassword(e.target.value);
-        setError(null)
-    }
-    function handleChangeUsername(e) {
-        setUserName(e.target.value)
-        setError(null)
     }
 
     return (
@@ -78,14 +105,14 @@ export default function Login({ setToken }) {
                             mx: 4,
                             display: 'flex',
                             flexDirection: 'column',
-                            alignItems: 'center',
+                            alignItems: 'center'
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            Reset Password
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
@@ -95,58 +122,57 @@ export default function Login({ setToken }) {
                                 id="username"
                                 label="Username"
                                 name="username"
-                                autoComplete="username"
                                 autoFocus
-                                onChange={e => handleChangeUsername(e)}
-                                error={error ? true : false}
+                                onChange={e => setUsername(e.target.value)}
+                                helperText={username_error}
+                                error={username_error ? true : false}
                             />
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={e => handleChangePassword(e)}
-                                error={error ? true : false}
-                                helperText={error}
+                                id="newPassword"
+                                label="New Password"
+                                name="newPassword"
+                                autoFocus
+                                onChange={e => setNewPassword(e.target.value)}
+                                helperText={password_error}
+                                error={password_error ? true : false}
                             />
-                            {/* <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            /> */}
-
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="verifyPassowrd"
+                                label="Verify Password"
+                                name="verifyPassowrd"
+                                autoFocus
+                                onChange={e => setVerifyPassword(e.target.value)}
+                                helperText={password_match_error}
+                                error={password_match_error ? true : false}
+                            />
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Sign In
+                                Reset
                             </Button>
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link href="./ForgotPassword" variant="body2" className='text-link'>
-                                        Forgot password
-                                    </Link>
-                                </Grid>
+                            <Grid container justifyContent="flex-end">
                                 <Grid item>
-                                    <Link href={"./SignUp"} variant="body2">
-                                        {"Don't have an account? Sign Up"}
+                                    <Link href="/" variant="body2">
+                                        back to login
                                     </Link>
                                 </Grid>
                             </Grid>
+
                             <Copyright sx={{ mt: 5 }} />
                         </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </ThemeProvider>
+                    </Box >
+                </Grid >
+            </Grid >
+        </ThemeProvider >
     );
 }
 
-Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}

@@ -8,12 +8,12 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import { useState } from "react";
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
+import validator from 'validator';
 
 
 
@@ -37,24 +37,53 @@ export default function SignUp(prop) {
     const [email, setEmail] = useState("");
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [nameError, setNameError] = useState(null);
+    const [emailError, setEmailError] = useState(null);
+    const [passwordError, setPasswordError] = useState(null);
+
+
     const navigate = useNavigate();
 
 
     const handleSubmit = async (event) => {
+        emailValidation()
+        passwordValidation()
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const entries = [...data.entries()];
-        console.log(entries);
         await axios.post(`http://localhost:5000/users/`, { first_name, last_name, email, username, password })
+            .then(function (response) { navigate('/profile'); })
             .catch((error) => {
                 if (error.response) {
                     console.log(error.response)
-                    console.log(error.response.status)
+                    console.log(error.response.data.msg)
                     console.log(error.response.headers)
+                    setNameError(error.response.data.msg)
                 }
             })
-        navigate('/profile');
     };
+    function handleChangeUsername(e) {
+        setUserName(e.target.value)
+        setNameError(null)
+    }
+    function handleChangeEmail(e) {
+        setEmail(e.target.value)
+        setEmailError(null)
+    }
+    function handleChangePassword(e) {
+        setPassword(e.target.value)
+        setPasswordError(null)
+    }
+
+    function emailValidation() {
+        if (!validator.isEmail(email)) {
+            setEmailError('Invalid email, please enter anthor email')
+        }
+    }
+
+    function passwordValidation() {
+        if (password.length < 6) {
+            setPasswordError("Your password must be at least 6 characters")
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -127,7 +156,9 @@ export default function SignUp(prop) {
                                         label="Username"
                                         name="username"
                                         autoComplete="username"
-                                        onChange={(e) => setUserName(e.target.value)}
+                                        onChange={(e) => handleChangeUsername(e)}
+                                        helperText={nameError}
+                                        error={nameError ? true : false}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -138,7 +169,9 @@ export default function SignUp(prop) {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => handleChangeEmail(e)}
+                                        helperText={emailError}
+                                        error={emailError ? true : false}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -150,7 +183,9 @@ export default function SignUp(prop) {
                                         type="password"
                                         id="password"
                                         autoComplete="new-password"
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => handleChangePassword(e)}
+                                        helperText={passwordError}
+                                        error={passwordError ? true : false}
                                     />
                                 </Grid>
                             </Grid>
