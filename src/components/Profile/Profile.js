@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import axios from "axios";
+import Logout from '../Logout/Logout'
+import useToken from '../App/useToken';
 
 function Profile(props) {
 
     const [profileData, setProfileData] = useState(null)
+    const { removeToken } = useToken();
+
 
     function getProfileData(prop) {
         axios.post(`http://localhost:5000/auth/profile`, { headers: { Authorization: 'Bearer ' + prop.token } })
@@ -34,6 +38,9 @@ function Profile(props) {
                 <p>About me: {profileData.about_me}</p>
             </div>
             }
+            <Logout token={removeToken} />
+
+
 
         </div>
     );
