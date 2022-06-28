@@ -13,8 +13,9 @@
 }
 
 .tmdbLogo {
-    width: 80px;
+    width: 140px;
     height: 80px;
+    margin-left: 650px;
 }
 
 .headerMovieTitle {
@@ -129,4 +130,27 @@
 
 .pageBtn:hover {
     background-color: #a3dded;
+}
+
+.search__movie {
+    background-color: #111111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    border-top: 1px solid lightgray;
+}
+
+.search__movie > form {
+    flex: 0.3;
+    display: flex;
+    margin-left: 110px;
+}
+
+.search__movie > form > input {
+    flex: 1;
+    border-radius: 30px;
+    padding: 10px;
+    border: none;
+    font-size: 16px;
 }

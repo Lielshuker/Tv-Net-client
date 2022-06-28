@@ -1,0 +1,22 @@
+.full__screen {
+    background-color: #111111;
+}
+
+.screen {
+    display: flex;
+    flex-direction: row;
+    background-color: #111111;
+    padding-left: 20px;
+}
+
+.youtube__screen {
+    flex: 0.8;
+    display: grid;
+    align-items: center;
+    margin-top: -50px;
+}
+
+.chatbox__screen {
+    flex: 0.2;
+    margin-top: 50px;
+}
