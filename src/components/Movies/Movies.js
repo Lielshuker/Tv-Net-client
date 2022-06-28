@@ -14,6 +14,7 @@ class Example extends React.Component {
                 autoplay: 1
             }
         };
+        const {videoId} = this.props;
         return <YouTube videoId="ULA1ChGvB0M" opts={opts} onReady={this._onReady} />;
     }
 }
