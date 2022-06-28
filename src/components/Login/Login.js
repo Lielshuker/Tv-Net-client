@@ -32,7 +32,7 @@ export default function Login({ setToken }) {
                 console.log(error); setError('Invalid Username or Password')
             });
         setToken(access_token);
-        navigate("/profile")
+        navigate("/moviesList", { state: { username: username} })
     }
 
     function Copyright(props) {

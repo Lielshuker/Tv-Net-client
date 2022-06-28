@@ -10,6 +10,7 @@ import MoviesList from '../Movies/MoviesList';
 import Example from '../Movies/Movies';
 import ForgotPassword from '../ForgotPassword/ForgotPassword'
 import ResetPassword from '../ResetPassword/ResetPassword'
+import YouTubePage from '../Movies/YouTubePage';
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
                 {/* <Route exact path="/movies" element={<Movie token={token} />}></Route> */}
                 <Route exact path="/moviesList" element={<MoviesList token={token} />}></Route>
                 <Route exact path='/watchMovie' element={<Example token={token} />}></Route>
+                <Route exact path='/YouTubePage' element={<YouTubePage token={token} />}></Route>
+                {/* <Route exact path="/youtubepage/:id" element={<YouTubePage />}></Route> */}
               </Routes>
             </>
 
