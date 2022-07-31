@@ -13,7 +13,7 @@ function Chatbox(props) {
     const username = props.username;
     const hostUsername = props.hostUsername;
     const isHost = props.isHost;
-
+    const movieNum = props.movieNum
     const roomName = hostUsername + movieId;
     //let roomId = "";
 
@@ -42,21 +42,21 @@ function Chatbox(props) {
             name: roomName,
             participants: [username]
         })
-        .then(function(docRef) {
-            console.log("ID: ", docRef.id);
-            console.log(roomId);
-            setRoomId(docRef.id);
-            console.log(roomId);
-            // roomId = docRef.id;
-            // return roomId;
-        })
-        .catch(function(error) {
-            console.error("Error adding document: ", error)
-        });
+            .then(function (docRef) {
+                console.log("ID: ", docRef.id);
+                console.log(roomId);
+                setRoomId(docRef.id);
+                console.log(roomId);
+                // roomId = docRef.id;
+                // return roomId;
+            })
+            .catch(function (error) {
+                console.error("Error adding document: ", error)
+            });
     }
 
     // useEffect(() => {
-        
+
     //     //temp();
     //     //console.log(roomId);
     // }, []);
@@ -73,7 +73,7 @@ function Chatbox(props) {
                     }
                 )))
             ))
-            
+
         }
     }, []);
 
@@ -119,7 +119,7 @@ function Chatbox(props) {
     return (
         <div className="chatbox">
             <div className="chatbox__body">
-                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost}/>
+                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost} movieId={movieNum} />
             </div>
         </div>
     );

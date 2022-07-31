@@ -3,6 +3,8 @@ import "./Chat.css";
 import db from "../../firebase"; // Maybe wrong!!!
 import firebase from "firebase";
 import { useNavigate } from "react-router";
+import axios from "axios";
+
 
 function Chat(props) {
     const [input, setInput] = useState("");
@@ -14,17 +16,31 @@ function Chat(props) {
     const roomName = props.roomName;
     const roomId = props.roomId;
     const isHost = props.isHost;
+    const movieId = props.movieId
+
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+        var dateTime = date + ' ' + time;
+        axios.post('http://localhost:5000/watched_movies/' + movieId, { participants: participants, date: dateTime })
+            .then((result) => result.json())
+            .catch((e) => console.log(e))
+    }, [movieId, participants]);
 
 
     useEffect(() => {
         roomId && db.collection('rooms')
-        .doc(roomId)
-        .collection('messages')
-        .orderBy('timestamp', 'asc').onSnapshot(snapshot => (
-            setMessages(snapshot.docs.map(doc => doc.data()))
-        ))
+            .doc(roomId)
+            .collection('messages')
+            .orderBy('timestamp', 'asc').onSnapshot(snapshot => (
+                setMessages(snapshot.docs.map(doc => doc.data()))
+            ))
     }, [roomId]);
 
     useEffect(() => {
@@ -48,11 +64,11 @@ function Chat(props) {
         var deletedRef = db.collection('rooms').doc(roomId);
         var batch = db.batch();
 
-        batch.update(deletedRef, {participants: firebase.firestore.FieldValue.arrayRemove(username)});
+        batch.update(deletedRef, { participants: firebase.firestore.FieldValue.arrayRemove(username) });
 
         //batch.commit().then(() => console.log('Succsess!')).catch(err => console.error('Failed!', err));
 
-        batch.commit().then(() => navigate("/moviesList", { state: { username: username} })).catch(err => console.error('Failed!', err));
+        batch.commit().then(() => navigate("/moviesList", { state: { username: username } })).catch(err => console.error('Failed!', err));
 
         //navigate("/moviesList", { state: { username: username} })
 
@@ -100,10 +116,10 @@ function Chat(props) {
             </div>
             <div className="chat__footer">
                 <form>
-                    <input value={input} 
-                    onChange={(e) => setInput(e.target.value)} 
-                    placeholder="Type a message" 
-                    type="text"/>
+                    <input value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type a message"
+                        type="text" />
                     <button onClick={sendMessage} type="submit">Send a message</button>
                 </form>
             </div>

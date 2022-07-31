@@ -5,13 +5,13 @@ import { EachMovie } from './EachMovie';
 import { useLocation } from 'react-router-dom';
 import logo from '../logo.png';
 
-export default function MoviesList (props) {
+export default function MoviesList(props) {
 
     let [movieList, setMovieList] = useState([]);
     let [updateVal, setUpdateVal] = useState(0);
     const [currentIndex, changeCurrentIndex] = useState(0);
     const [movieID, setMovieID] = useState(1);
-    const [movieDetails, setMovieDetails] = useState({}); 
+    const [movieDetails, setMovieDetails] = useState({});
     const [movieGenres, setMovieGenres] = useState(movieDetails['genres'])
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,19 +20,19 @@ export default function MoviesList (props) {
 
 
     useEffect(() => {
-        fetch('http://localhost:5000/movies/allMovies')
-        .then((result) => result.json())
-        .then((resultJSON) => {setMovieList(resultJSON.movies); console.log(resultJSON)})
-        .catch((e) => console.log(e))
-        .finally(() => {setUpdateVal(1)})
+        fetch('http://localhost:5000/movies/allMovies/' + username)
+            .then((result) => result.json())
+            .then((resultJSON) => { setMovieList(resultJSON.movies); console.log(resultJSON) })
+            .catch((e) => console.log(e))
+            .finally(() => { setUpdateVal(1) })
     }, []);
 
     useEffect(() => {
         fetch('http://localhost:5000/movies/' + movieID)
-        .then((result) => result.json())
-        .then((resultJSON) => {setMovieDetails(resultJSON); setMovieID(resultJSON['id']);})
-        .catch((e) => console.log(e))
-        .finally(() => {setMovieGenres(movieDetails['genre_id'])})
+            .then((result) => result.json())
+            .then((resultJSON) => { setMovieDetails(resultJSON); setMovieID(resultJSON['id']); })
+            .catch((e) => console.log(e))
+            .finally(() => { setMovieGenres(movieDetails['genre_id']) })
     }, [movieID]);
 
     useEffect(() => {
@@ -54,11 +54,11 @@ export default function MoviesList (props) {
 
 
     return (
-        <div>   
+        <div>
             <div className='header'>
                 <a href="https://www.themoviedb.org/">
                     <img src={logo} alt="TMDB" className='tmdbLogo'></img>
-                    </a> 
+                </a>
                 {/* {
                     movieList.length > 0 ? (
                         <h1 className='headerMovieTitle'> Trending Movies & Series  </h1>
@@ -69,8 +69,8 @@ export default function MoviesList (props) {
                 } */}
             </div>
             {
-                movieList.length > 0 ? 
-                <div>
+                movieList.length > 0 ?
+                    <div>
                         <div>
                             <Details
                                 id='top'
@@ -78,22 +78,23 @@ export default function MoviesList (props) {
                                 length={movieDetails['length']}
                                 genreID={movieDetails['genre_id']}
                                 releaseYear={movieDetails['release_year']}
-                                dateAdded={movieDetails['date_added']} 
+                                dateAdded={movieDetails['date_added']}
                                 movieDescription={movieDetails['description']}
-                                movieURL={movieDetails['movie_url']} 
-                                imageURL={movieDetails['image_url']} 
+                                movieURL={movieDetails['movie_url']}
+                                imageURL={movieDetails['image_url']}
                                 movieGenres={movieGenres}
                                 username={username}
+                                movieNum={movieID}
                             />
                         </div>
 
                         <div className='search__movie'>
                             <form>
                                 <input type="text"
-                                placeholder='Search a movie'
-                                onChange={(event) => {
-                                    setSearchTerm(event.target.value);
-                                }} />
+                                    placeholder='Search a movie'
+                                    onChange={(event) => {
+                                        setSearchTerm(event.target.value);
+                                    }} />
                             </form>
                         </div>
 
@@ -112,18 +113,18 @@ export default function MoviesList (props) {
                                     }
                                 }).map((movie, index) => {
                                     return (
-                                        movie.toShow ? 
-                                        <div>
-                                            <EachMovie key={index} index={index} onClickFunc={changeMovie} imageURL={movieList[index]["image_url"]} movieDescription={movieList[index]["description"]} name={movieList[index]['name']} releaseYear={movieList[index]['release_year']} />
-                                        </div>
-                                        : null
+                                        movie.toShow ?
+                                            <div>
+                                                <EachMovie key={index} index={index} onClickFunc={changeMovie} imageURL={movieList[index]["image_url"]} movieDescription={movieList[index]["description"]} name={movieList[index]['name']} releaseYear={movieList[index]['release_year']} />
+                                            </div>
+                                            : null
                                     )
                                 })
                             }
                         </div>
-                        
+
                     </div>
-                : <Details bgImage='' moviePoster='' movieRD='Release Date' movieTitle= 'Movie Title' />
+                    : <Details bgImage='' moviePoster='' movieRD='Release Date' movieTitle='Movie Title' />
 
             }
         </div>

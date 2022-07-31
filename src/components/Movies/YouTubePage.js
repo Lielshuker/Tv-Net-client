@@ -21,21 +21,22 @@ export default function YouTubePage() {
                 autoplay: 1
             }
         };
-        
+
         const videoId = state.movieId;
         console.log(videoId);
-    
+
         return (
             <div>
                 <YouTube videoId={videoId} opts={opts} onReady={onReady} />
             </div>
-        ); 
+        );
     } else {
         const movieId = state.movieId;
         const movieName = state.movieName;
         const username = state.username;
         const hostUsername = state.hostUsername;
         const isHost = state.isHost;
+        const movieNum = state.movieNum
         const opts = {
             height: '585',
             width: '960',
@@ -43,28 +44,28 @@ export default function YouTubePage() {
                 autoplay: 1
             }
         };
-    
+
         return (
             <div className='full__screen'>
                 <div className='header'>
-                <a href="https://www.themoviedb.org/">
-                    <img src={logo} alt="TMDB" className='tmdbLogo'></img>
-                </a> 
+                    <a href="https://www.themoviedb.org/">
+                        <img src={logo} alt="TMDB" className='tmdbLogo'></img>
+                    </a>
+                </div>
+
+                <div className='screen'>
+                    <div className='youtube__screen'>
+                        <YouTube videoId={movieId} opts={opts} onReady={onReady} />
+                    </div>
+                    <div className='chatbox__screen'>
+                        <Chatbox movieId={movieId} movieName={movieName} username={username} hostUsername={hostUsername} isHost={isHost} movieNum={movieNum} />
+                    </div>
+                    {/* <YouTube videoId={movieId} opts={opts} onReady={onReady} /> */}
+                </div>
             </div>
 
-            <div className='screen'>
-                <div className='youtube__screen'>
-                    <YouTube videoId={movieId} opts={opts} onReady={onReady} />
-                </div>
-                <div className='chatbox__screen'>
-                    <Chatbox movieId={movieId} movieName={movieName} username={username} hostUsername={hostUsername} isHost={isHost} />
-                </div>
-                {/* <YouTube videoId={movieId} opts={opts} onReady={onReady} /> */}
-            </div>
-            </div>
-            
-        ); 
-    } 
-    
-    
+        );
+    }
+
+
 }
