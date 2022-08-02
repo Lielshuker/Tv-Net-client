@@ -3,7 +3,8 @@ import Example from '../Movies/Movies'
 import {useNavigate} from 'react-router-dom'
 import YouTubePage from './YouTubePage';
 import { Button } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import db from '../../firebase';
 
 function genreListToString(genres) {
     let genresStr = "";
@@ -24,7 +25,9 @@ export const Details = (props) => {
     const navigate = useNavigate();
     let backdropImage = props.imageURL;
     const [roomName, setRoomName] = useState("");
+    const [rooms, setRooms] = useState([]);
     const [show, setShow] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     function handleSubmitWatchNow(videoId) {
         console.log(videoId);
@@ -38,6 +41,28 @@ export const Details = (props) => {
     function EnterRoom(videoId, videoName, username, hostUsername) {
         navigate('/YouTubePage', { state: { movieId: videoId, movieName: videoName, username: username, hostUsername: hostUsername, isHost: false } });
     }
+
+    function ChechIfExists(videoId, hostUsername) {
+        const tempRoomName = hostUsername + videoId;
+        var i;
+        for (i = 0; i < rooms.length; i++) {
+            if (rooms[i].data.name == tempRoomName) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    useEffect(() => {
+        db.collection('rooms').onSnapshot(snapshot => (
+            setRooms(snapshot.docs.map(doc => (
+                {
+                    id: doc.id,
+                    data: doc.data()
+                }
+            )))
+        ))
+    }, []);
 
     return (
         <div className='detailsPage' style={{backgroundImage: `url(${backdropImage})`}}>
@@ -85,8 +110,16 @@ export const Details = (props) => {
                                     type="text" />
                                     <Button onClick={() => {
                                         const id = extractVideoID(props.movieURL);
-                                        EnterRoom(id, props.name, props.username, roomName);
+                                        if (ChechIfExists(id, roomName)) {
+                                            EnterRoom(id, props.name, props.username, roomName);
+                                        } else {
+                                            setShowError(true);
+                                        }
                                     }} type="submit">Enter room</Button>
+                                    {
+                                        showError && <h3 >Room doesn't exist!</h3>
+                                    }
+                                    
                                 </div> : null}
                             </div>                         
                     }                     
