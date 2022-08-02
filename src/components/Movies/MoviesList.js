@@ -37,7 +37,7 @@ export default function MoviesList(props) {
 
     const handleChangePage = (event, value) => {
         setCurrentPage(value)
-        axios.post('http://localhost:5000/movies/allMovies/' + username, { page: currentPage, per_page: itemsPerPage })
+        axios.post('http://localhost:5000/movies/allMovies/' + username, { page: value, per_page: itemsPerPage })
             // .then((result) => console.log(result.data))
             .then((result) => {
                 // console.log(resultJSON)
@@ -46,6 +46,8 @@ export default function MoviesList(props) {
                 // setMovieDetails(resultJSON.slice(itemOffset, endOffset));
                 setMovieList(result.data.movies)
                 setTotal(Math.ceil(result.data.total / itemsPerPage))
+                setMovieID(result.data.movies[0].id)
+
 
             })
 
@@ -62,7 +64,7 @@ export default function MoviesList(props) {
         // setItemOffset(15)
         // setPageCount(Math.ceil(total.length / itemsPerPage));
 
-        axios.post('http://localhost:5000/movies/allMovies/' + username, { page: pageCount, per_page: itemsPerPage })
+        axios.post('http://localhost:5000/movies/allMovies/' + username, { page: currentPage, per_page: itemsPerPage })
             // .then((result) => console.log(result.data))
             .then((result) => {
                 // console.log(resultJSON)
@@ -71,6 +73,8 @@ export default function MoviesList(props) {
                 // setMovieDetails(resultJSON.slice(itemOffset, endOffset));
                 setMovieList(result.data.movies)//.slice(itemOffset, endOffset))
                 setTotal(Math.ceil(result.data.total / itemsPerPage))
+                setMovieID(result.data.movies[0].id)
+                // setMovieID(2)
 
             })
 
@@ -196,22 +200,6 @@ export default function MoviesList(props) {
 
 }
 
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//         "& > * + *": {
-//             background: 'red',
-//             margin: theme.spacing(2)
-//         }
-//     }
-// }));
-// const useStyles = makeStyles((theme) => ({
-//     root: {
-//         '& ul > li:not(:first-child):not(:last-child) > button:not(.Mui-selected)': {
-//             backgroundColor: 'transparent',
-//             color: '#19D5C6',
-//         },
-//     }),
-// );
 const useStyles = makeStyles({
     root: {
         background: 'linear-gradient(45deg, #1E90FF 30%, #00008B 90%)',
