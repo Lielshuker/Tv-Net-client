@@ -8,7 +8,6 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { useState } from "react";
 
 export default function Controls(props) {
-    //const client = useClient();
     const { tracks, setStart, setInCall, client } = props;
     const [trackState, setTrackState] = useState({ video: true, audio: true });
 
@@ -26,15 +25,6 @@ export default function Controls(props) {
         }
     };
 
-    // const leaveChannel = async () => {
-    //     await client.leave();
-    //     client.removeAllListeners();
-    //     tracks[0].close();
-    //     tracks[1].close();
-    //     setStart(false);
-    //     setInCall(false);
-    // };
-
     return (
         <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -51,14 +41,6 @@ export default function Controls(props) {
                     {trackState.video ? <VideocamIcon /> : <VideocamOffIcon />}
                 </Button>
             </Grid>
-            {/* <Grid item>
-                <Button variant="contained" 
-                color="default"
-                onClick={() => leaveChannel()}>
-                    Leave
-                    <ExitToAppIcon />
-                </Button>
-            </Grid> */}
         </Grid>
     );
 }

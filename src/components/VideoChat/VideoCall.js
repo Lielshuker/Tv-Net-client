@@ -10,36 +10,6 @@ import firebase from "firebase";
 export default function VideoCall(props) {
     const { setInCall, roomName, isHost, roomId, token, ready, tracks, start, setStart, client } = props;
     const [users, setUsers] = useState([]);
-    //const [start, setStart] = useState(false);
-    //const client = useClient();
-    //const { ready, tracks } = useMicrophoneAndCameraTracks();
-    //const [token, setToken] = useState("");
-
-    // function getToken() {
-    //     if (isHost) {
-    //         const url = `http://localhost:8080/access_token?channelName=${roomName}&role=subscriber`;
-    //         fetch(url).then(response => response.json()).then(data => {
-    //             console.log("data['token']: ", data['token']);
-    //             setToken(data['token']);
-    //             console.log("token: ", token);
-    //             var roomRef = db.collection('rooms').doc(roomId);
-    //             var setWithMerge = roomRef.set({
-    //                 'agora-token': data['token']
-    //             }, { merge: true });
-    //         });
-    //     } else {
-    //         db.collection('rooms').doc(roomId).get().then((doc) => {
-    //             if (doc.exists) {
-    //                 console.log("Document data: ", doc.data());
-    //                 console.log("Agora-token: ", doc.agora-token)
-    //             } else {
-    //                 console.log("No such document");
-    //             }
-    //         }).catch((error) => {
-    //             console.log("Error getting document: ", error);
-    //         });
-    //     }
-    // }
 
     useEffect(() => {
         let init = async () => {
@@ -76,7 +46,6 @@ export default function VideoCall(props) {
 
             try {
                 await client.join(config.appId, roomName, token, null);
-                //await client.join(config.appId, name, config.token, null);
             } catch (error) {
                 console.log("The is an error");
                 console.log(error);
@@ -89,10 +58,6 @@ export default function VideoCall(props) {
         };
 
         if (ready && tracks && token) {
-            // var roomRef = db.collection('rooms').doc(roomId);
-            // var setWithMerge = roomRef.set({
-            //     'agora-token': token
-            // }, { merge: true });
             try {
                 init();
             } catch (error) {
@@ -100,11 +65,6 @@ export default function VideoCall(props) {
             }
         }
     }, [ready, tracks, token]);
-    //}, [roomName, client, ready, tracks]);
-
-    // useEffect(() => {
-    //     getToken();
-    // }, []);
 
     return (
         <Grid container className='video__body' direction="column" style={{ height: "65%" }}>
