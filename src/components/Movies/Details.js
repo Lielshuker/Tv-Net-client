@@ -33,6 +33,13 @@ export const Details = (props) => {
 
 
     function handleSubmitWatchNow(videoId, movieNum) {
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+        axios.post('http://localhost:5000/watched_movies/' + movieNum, { participants: [props.username], date: dateTime })
+            .then((result) => result.json())
+            .catch((e) => console.log(e))
         navigate('/YouTubePage', { state: { movieId: videoId, movieNum: movieNum } });
     }
 
@@ -43,6 +50,7 @@ export const Details = (props) => {
     function EnterRoom(videoId, videoName, username, hostUsername, movieNum) {
         navigate('/YouTubePage', { state: { movieId: videoId, movieName: videoName, username: username, hostUsername: hostUsername, isHost: false, movieNum: movieNum } });
     }
+
 
     const options = [
         { value: '0', label: '0' },
@@ -89,11 +97,9 @@ export const Details = (props) => {
                 }
             })
     };
-    debugger;
 
 
     const getRate = async () => {
-        debugger
         await axios.get(`http://localhost:5000/recommender/rate/` + props.username, { movie_id: props.movieNum })
             .then((response) => {
                 console.log(response);
@@ -174,18 +180,15 @@ export const Details = (props) => {
 
 
                     <div style={{ paddingBottom: '20px' }}></div>
-                    <p>  {"user rating: "} </p>
+                    {/* <p>  {"user rating: "} </p> */}
 
-                    <Select styles={customStyles} menuColor='black' menuPortalTarget={document.querySelector('body')} //value={selectedOption}
+                    {/* <Select styles={customStyles} menuColor='black' menuPortalTarget={document.querySelector('body')}
                         options={options} placeholder={placeholderValue}
                         onChange={handleTypeSelect}
                         value={options.filter(function (option) {
                             return option.value === selectedOption;
                         })}
-                    // {/* // onChange={e => setSelectedOption(e.target.value)} */}
-
-                    // {/* onChange={(e) => { onChange() }} //props.movieNum, e.target.value) }} //value={this.state.selectedOption} */}
-                    />
+                    /> */}
 
 
                 </div>
