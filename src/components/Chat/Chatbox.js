@@ -3,29 +3,34 @@ import Chat from "./Chat";
 import "./Chatbox.css";
 import db from "../../firebase";
 import firebase from "firebase";
+import VideoChat from "../VideoChat/VideoChat";
+import VideoCall from "../VideoChat/VideoCall";
 import { createRoutesFromChildren } from "react-router";
+import { useClient, useMicrophoneAndCameraTracks } from "../VideoChat/settings";
+
 
 function Chatbox(props) {
     const [rooms, setRooms] = useState([]);
     const [roomId, setRoomId] = useState("");
+    const [token, setToken] = useState("");
     const movieId = props.movieId;
     const movieName = props.movieName;
     const username = props.username;
     const hostUsername = props.hostUsername;
     const isHost = props.isHost;
 
+    const client = useClient();
+    const { ready, tracks } = useMicrophoneAndCameraTracks();
+    const [start, setStart] = useState(false);
+    const [inCall, setInCall] = useState(true);
+
     const roomName = hostUsername + movieId;
-    //let roomId = "";
 
     function getKeyFromFirebase(roomName) {
-        console.log(rooms);
         var i;
         for (i = 0; i < rooms.length; i++) {
             if (rooms[i].data.name == roomName) {
-                console.log(rooms[i].data.name);
-                console.log(rooms[i].id);
                 setRoomId(rooms[i].id)
-                //return rooms[i].id;
             }
         }
         return null;
@@ -47,79 +52,82 @@ function Chatbox(props) {
             console.log(roomId);
             setRoomId(docRef.id);
             console.log(roomId);
-            // roomId = docRef.id;
-            // return roomId;
         })
         .catch(function(error) {
             console.error("Error adding document: ", error)
         });
     }
 
-    // useEffect(() => {
-        
-    //     //temp();
-    //     //console.log(roomId);
-    // }, []);
+    const enterRoom = () => {
+        db.collection('rooms').onSnapshot(snapshot => (
+            setRooms(snapshot.docs.map(doc => (
+                {
+                    id: doc.id,
+                    data: doc.data()
+                }
+            )))
+        ))
+    }
+
+    const createAgoraVideoRoom = () => {
+        const url = `http://localhost:8080/access_token?channelName=${roomName}&role=subscriber`;
+        fetch(url).then(response => response.json()).then(data => {
+            setToken(data['token']);
+            console.log(data['token']);
+            var roomRef = db.collection('rooms').doc(roomId);
+            var setWithMerge = roomRef.set({
+                'token': data['token']
+            }, { merge: true });
+        });
+    }
+
+    const enterAgoraVideoRoom = () => {
+        console.log(roomId);
+        db.collection('rooms').doc(roomId).get().then((doc) => {
+            if (doc.exists) {
+                console.log("Document data: ", doc.data());
+                console.log("Agora-token: ", doc.data().token);
+                setToken(doc.data().token);
+            } else {
+                console.log("No such document");
+            }
+        }).catch((error) => {
+            console.log("Error getting document: ", error);
+        });
+    }
 
     useEffect(() => {
         if (isHost) {
             createRoom();
         } else {
-            db.collection('rooms').onSnapshot(snapshot => (
-                setRooms(snapshot.docs.map(doc => (
-                    {
-                        id: doc.id,
-                        data: doc.data()
-                    }
-                )))
-            ))
-            
+            enterRoom();
         }
     }, []);
 
     useEffect(() => {
         rooms.length && getKeyFromFirebase(roomName);
-        //rooms.length && addParticipant();
     }, [rooms]);
 
     useEffect(() => {
         roomId && addParticipant();
     }, [roomId]);
 
-    // function temp() {
-    //     if (isHost) {        
-
-    //         createRoom();
-    //     } else {
-    //         getKeyFromFirebase(roomName);
-    //     }
-    // }
-    // temp();
-
-
-    //temp();
-
-    //roomId = temp();
-    //console.log(roomId);
-
-
-
-    // if(isHost) {
-    //     createRoom();
-    // } else {
-    //     roomId = getKeyFromFirebase(roomName);
-    //     // const admin = require("firebase-admin");
-    //     // const FieldValue = admin.firestore.FieldValue;
-    //     // db.collection('rooms').doc(roomId).update({
-    //     //     participants: FieldValue.arrayUnion("test3")
-    //     // });
-    // }
+    useEffect(() => {
+        if (isHost) {
+            roomId && createAgoraVideoRoom();
+        } else {
+            roomId && enterAgoraVideoRoom();
+        }
+    }, [roomId]);
 
 
     return (
         <div className="chatbox">
             <div className="chatbox__body">
-                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost}/>
+                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost} 
+                setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} />
+                <VideoCall className="videochat__body" roomName={roomName} isHost={isHost} roomId={roomId} token={token} 
+                setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} start = {start} />
             </div>
         </div>
     );

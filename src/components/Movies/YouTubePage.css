@@ -10,13 +10,14 @@
 }
 
 .youtube__screen {
-    flex: 0.8;
+    flex: 0.2;
     display: grid;
     align-items: center;
-    margin-top: -50px;
+    margin-top: -10px;
 }
 
 .chatbox__screen {
-    flex: 0.2;
+    flex: 0.8;
+    display: grid;
     margin-top: 50px;
 }
