@@ -68,6 +68,7 @@
     .headerMovieTitle {
         display: none;
     }
+
     .gridView {
         padding-left: 15%;
         grid-template-columns: repeat(1, 50vw);
@@ -79,6 +80,7 @@
     .headerMovieTitle {
         display: none;
     }
+
     .gridView {
         padding-left: 3%;
         grid-template-columns: repeat(2, 20vw);
@@ -93,6 +95,7 @@
         display: inline;
         font-size: 20px;
     }
+
     .gridView {
         padding-left: 4%;
         grid-template-columns: repeat(3, 30vw);
@@ -107,6 +110,7 @@
         display: inline;
         font-size: 25px;
     }
+
     .gridView {
         padding-left: 100px;
         padding-top: 20px;
@@ -141,16 +145,24 @@
     border-top: 1px solid lightgray;
 }
 
-.search__movie > form {
+.search__movie>form {
     flex: 0.3;
     display: flex;
     margin-left: 110px;
 }
 
-.search__movie > form > input {
+.search__movie>form>input {
     flex: 1;
     border-radius: 30px;
     padding: 10px;
     border: none;
     font-size: 16px;
+}
+
+.logout {
+    display: flex;
+}
+
+.logout_header {
+    display: flex;
 }

@@ -9,6 +9,8 @@ import ReactPaginate from 'react-paginate';
 import { Pagination, PaginationItem } from '@mui/material';
 import axios from "axios";
 import { makeStyles } from '@mui/styles';
+import Logout from '../Logout/Logout';
+import useToken from '../App/useToken';
 
 // import { makeStyles } from '@material-ui/core/styles/makeStyles';
 
@@ -28,6 +30,7 @@ export default function MoviesList(props) {
     const [movieGenres, setMovieGenres] = useState(movieDetails['genres'])
     const [searchTerm, setSearchTerm] = useState("");
     const classes = useStyles();
+    const { removeToken } = useToken();
 
 
 
@@ -114,8 +117,12 @@ export default function MoviesList(props) {
     return (
         <div>
             <div className='header'>
-                <a href="https://www.themoviedb.org/">
-                    <img src={logo} alt="TMDB" className='tmdbLogo'></img>
+                <a href="http://localhost:3000/moviesList" className='logout_header'>
+                    <div classname="logout">
+                        <Logout token={removeToken} />
+
+                        <img src={logo} alt="TMDB" className='tmdbLogo'></img>
+                    </div>
                 </a>
                 {/* {
                     movieList.length > 0 ? (
