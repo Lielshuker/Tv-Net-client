@@ -18,6 +18,8 @@ import useToken from '../App/useToken';
 export default function MoviesList(props) {
 
     let [movieList, setMovieList] = useState([]);
+    let [allMovieList, setAllMovieList] = useState([]);
+
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -64,19 +66,13 @@ export default function MoviesList(props) {
     };
 
     useEffect(() => {
-        // setItemOffset(15)
-        // setPageCount(Math.ceil(total.length / itemsPerPage));
-
         axios.post('http://localhost:5000/movies/allMovies/' + username, { page: currentPage, per_page: itemsPerPage })
-            // .then((result) => console.log(result.data))
             .then((result) => {
-                // console.log(resultJSON)
                 console.log(result.data)
-                // const endOffset = itemOffset + itemsPerPage;
-                // setMovieDetails(resultJSON.slice(itemOffset, endOffset));
                 setMovieList(result.data.movies)//.slice(itemOffset, endOffset))
                 setTotal(Math.ceil(result.data.total / itemsPerPage))
                 setMovieID(result.data.movies[0].id)
+                setAllMovieList(result.data.allMovies)
                 // setMovieID(2)
 
             })
@@ -118,7 +114,7 @@ export default function MoviesList(props) {
         <div>
             <div className='header'>
                 <a href="http://localhost:3000/moviesList" className='logout_header'>
-                    <div classname="logout">
+                    <div className="logout">
                         <Logout token={removeToken} />
 
                         <img src={logo} alt="TMDB" className='tmdbLogo'></img>
@@ -165,26 +161,51 @@ export default function MoviesList(props) {
 
                         <div className='gridView'>
                             {
-                                movieList.filter((val) => {
-                                    if (searchTerm == "") {
-                                        val.toShow = true;
-                                        return val;
-                                    } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                        val.toShow = true;
-                                        return val;
-                                    } else {
-                                        val.toShow = false;
-                                        return val;
-                                    }
-                                }).map((movie, index) => {
-                                    return (
-                                        movie.toShow ?
-                                            <div>
-                                                <EachMovie key={index} index={index} onClickFunc={changeMovie} imageURL={movieList[index]["image_url"]} movieDescription={movieList[index]["description"]} name={movieList[index]['name']} releaseYear={movieList[index]['release_year']} />
-                                            </div>
-                                            : null
-                                    )
-                                })
+
+                                searchTerm == "" ?
+                                    movieList.filter((val) => {
+                                        if (searchTerm == "") {
+                                            val.toShow = true;
+                                            return val;
+                                        } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                            val.toShow = true;
+                                            return val;
+                                        } else {
+                                            val.toShow = false;
+                                            return val;
+                                        }
+                                    }).map((movie, index) => {
+                                        return (
+                                            movie.toShow ?
+                                                <div>
+                                                    <EachMovie key={index} index={index} onClickFunc={changeMovie} imageURL={movieList[index]["image_url"]}
+                                                        movieDescription={movieList[index]["description"]} name={movieList[index]['name']} releaseYear={movieList[index]['release_year']} />
+                                                </div>
+                                                : null
+                                        )
+                                    }) :
+                                    allMovieList.filter((val) => {
+                                        if (searchTerm == "") {
+                                            val.toShow = true;
+                                            return val;
+                                        } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                            val.toShow = true;
+                                            return val;
+                                        } else {
+                                            val.toShow = false;
+                                            return val;
+                                        }
+                                    }).map((movie, index) => {
+                                        return (
+                                            movie.toShow ?
+                                                <div>
+                                                    <EachMovie key={index} index={index} onClickFunc={changeMovie} imageURL={allMovieList[index]["image_url"]}
+                                                        movieDescription={allMovieList[index]["description"]} name={allMovieList[index]['name']} releaseYear={allMovieList[index]['release_year']} />
+                                                </div>
+                                                : null
+                                        )
+                                    })
+
                             }
                         </div>
                         <div className={classes.root}>
