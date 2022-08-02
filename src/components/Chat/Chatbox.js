@@ -18,7 +18,7 @@ function Chatbox(props) {
     const username = props.username;
     const hostUsername = props.hostUsername;
     const isHost = props.isHost;
-
+    const movieNum = props.movieNum
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
     const [start, setStart] = useState(false);
@@ -47,6 +47,7 @@ function Chatbox(props) {
             name: roomName,
             participants: [username]
         })
+
         .then(function(docRef) {
             console.log("ID: ", docRef.id);
             console.log(roomId);
@@ -100,6 +101,7 @@ function Chatbox(props) {
         if (isHost) {
             createRoom();
         } else {
+
             enterRoom();
         }
     }, []);
@@ -124,7 +126,7 @@ function Chatbox(props) {
     return (
         <div className="chatbox">
             <div className="chatbox__body">
-                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost} 
+                <Chat movieName={movieName} username={username} roomName={roomName} roomId={roomId} isHost={isHost}  movieId={movieNum}
                 setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} />
                 <VideoCall className="videochat__body" roomName={roomName} isHost={isHost} roomId={roomId} token={token} 
                 setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} start = {start} />
