@@ -1,15 +1,19 @@
 .chatbox {
     display: grid;
     place-items: center;
-    background-color: #dadbd3;
     height: 80vh;
+    width: fit-content;
 }
 
 .chatbox__body {
-    display: flex;
     background-color: #ededed;
-    margin-top: -50px;
-    height: 90vh;
-    width: 30vw;
+    margin-top: -90px;
+    margin-right: 60px;
+    height: 85vh;
+    width: 35vw;
     box-shadow: -1px 4px 20px -6px rgba(0, 0, 0, 0.2);
+}
+
+.videochat__body {
+    display: flex;
 }

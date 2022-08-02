@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Chat.css";
-import db from "../../firebase"; // Maybe wrong!!!
+import db from "../../firebase";
 import firebase from "firebase";
 import { useNavigate } from "react-router";
 import axios from "axios";
@@ -20,6 +20,7 @@ function Chat(props) {
 
 
     const navigate = useNavigate();
+    const { ready, tracks, setStart, setInCall, client } = props;
 
     useEffect(() => {
         var today = new Date();
@@ -64,31 +65,41 @@ function Chat(props) {
         var deletedRef = db.collection('rooms').doc(roomId);
         var batch = db.batch();
 
-        batch.update(deletedRef, { participants: firebase.firestore.FieldValue.arrayRemove(username) });
 
-        //batch.commit().then(() => console.log('Succsess!')).catch(err => console.error('Failed!', err));
+        // batch.update(deletedRef, {participants: firebase.firestore.FieldValue.arrayRemove(username)});
 
-        batch.commit().then(() => navigate("/moviesList", { state: { username: username } })).catch(err => console.error('Failed!', err));
+        // batch.commit().then(() => navigate("/moviesList", { state: { username: username} }))
+        // .catch(err => console.error('Failed!', err));
 
-        //navigate("/moviesList", { state: { username: username} })
-
-
-        // if (isHost) {
-
-        // } else {
-        //     var tempDB = firebase.firestore();
-        //     var deletedRef = db.collection('rooms').doc(roomId);
-        //     var batch = db.batch();
-
-        //     batch.update(deletedRef, {participants: firebase.firestore.FieldValue.arrayRemove(username)});
-
-        //     batch.commit().then(() => console.log('Succsess!')).catch(err => console.error('Failed!', err));
-        // }
-
-        // if (isHost) {
-        //     db.collection('rooms').doc('iNadwEruM7893Lz9YL43').delete();
-        // }
+        if (participants.length == 1) {
+            db.collection('rooms').doc(roomId).delete()
+            .then(() => navigate("/moviesList", { state: { username: username } }))
+            .catch(err => console.error('Failed!', err));
+        } else {
+            batch.update(deletedRef, {participants: firebase.firestore.FieldValue.arrayRemove(username)});
+            batch.commit().then(() => navigate("/moviesList", { state: { username: username} }))
+            .catch(err => console.error('Failed!', err));
+        }
+        
+        const leaveChannel = async () => {
+            await client.leave();
+            client.removeAllListeners();
+            tracks[0].close();
+            tracks[1].close();
+            setStart(false);
+            setInCall(false);
+        };
+        
+        leaveChannel();
     }
+
+    const leaveAgoraVideoRoom = () => {
+
+    }
+
+    window.addEventListener("beforeunload", (ev) => {
+        leaveRoom(ev);
+    })
 
     return (
         <div className='chat'>

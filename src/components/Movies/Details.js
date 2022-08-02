@@ -3,10 +3,11 @@ import Example from '../Movies/Movies'
 import { useNavigate } from 'react-router-dom'
 import YouTubePage from './YouTubePage';
 import { Button } from '@mui/material';
-import { useState } from 'react';
 import Select from 'react-select'
 import axios from "axios";
 
+import { useState, useEffect } from 'react';
+import db from '../../firebase';
 
 function genreListToString(genres) {
     let genresStr = "";
@@ -27,10 +28,11 @@ export const Details = (props) => {
     const navigate = useNavigate();
     let backdropImage = props.imageURL;
     const [roomName, setRoomName] = useState("");
+    const [rooms, setRooms] = useState([]);
     const [show, setShow] = useState(false);
     const [selectedOption, setSelectedOption] = useState("none");
-
-
+    const [showError, setShowError] = useState(false);
+  
 
     function handleSubmitWatchNow(videoId, movieNum) {
         var today = new Date();
@@ -123,6 +125,27 @@ export const Details = (props) => {
 
     const placeholderValue = (selectedOption == "none") ? 'rate the movie' : getRate()
 
+    function ChechIfExists(videoId, hostUsername) {
+        const tempRoomName = hostUsername + videoId;
+        var i;
+        for (i = 0; i < rooms.length; i++) {
+            if (rooms[i].data.name == tempRoomName) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    useEffect(() => {
+        db.collection('rooms').onSnapshot(snapshot => (
+            setRooms(snapshot.docs.map(doc => (
+                {
+                    id: doc.id,
+                    data: doc.data()
+                }
+            )))
+        ))
+    }, []);
 
     return (
         <div className='detailsPage' style={{ backgroundImage: `url(${backdropImage})` }}>
@@ -164,33 +187,29 @@ export const Details = (props) => {
                                     HostRoom(id, props.name, props.username, props.username, props.movieNum);
                                 }}> Host a room </Button>
                                 <Button onClick={() => setShow(!show)}> Enter existing room </Button>
-                                {show ?
-                                    <div className='enter_room' type>
-                                        <input value={roomName}
-                                            onChange={(e) => setRoomName(e.target.value)}
-                                            placeholder="Enter hosts username"
-                                            type="text" />
-                                        <Button onClick={() => {
-                                            const id = extractVideoID(props.movieURL);
+
+                                { show ? 
+                                <div className='enter_room' type>
+                                    <input value={roomName}
+                                    onChange={(e) => setRoomName(e.target.value)}
+                                    placeholder="Enter hosts username"
+                                    type="text" />
+                                    <Button onClick={() => {
+                                        const id = extractVideoID(props.movieURL);
+                                        if (ChechIfExists(id, roomName)) {
                                             EnterRoom(id, props.name, props.username, roomName, props.movieNum);
-                                        }} type="submit">Enter room</Button>
-                                    </div> : null}
-                            </div>
-                    }
-
-
-                    <div style={{ paddingBottom: '20px' }}></div>
-                    {/* <p>  {"user rating: "} </p> */}
-
-                    {/* <Select styles={customStyles} menuColor='black' menuPortalTarget={document.querySelector('body')}
-                        options={options} placeholder={placeholderValue}
-                        onChange={handleTypeSelect}
-                        value={options.filter(function (option) {
-                            return option.value === selectedOption;
-                        })}
-                    /> */}
-
-
+                                        } else {
+                                            setShowError(true);
+                                        }
+                                    }} type="submit">Enter room</Button>
+                                    {
+                                        showError && <h3 >Room doesn't exist!</h3>
+                                    }
+                                    
+                                </div> : null}
+                            </div>                         
+                    }                     
+                    <div style={{paddingBottom: '20px'}}></div>
                 </div>
 
                 <div>
