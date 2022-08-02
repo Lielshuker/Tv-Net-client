@@ -20,6 +20,8 @@ export default function YouTubePage() {
     const username = state.username;
     const hostUsername = state.hostUsername;
     const isHost = state.isHost;
+    const movieNum = state.movieNum
+
         
     const roomName = hostUsername + movieId;
 
@@ -44,7 +46,7 @@ export default function YouTubePage() {
                 </div>
                 {state.movieName ? (
                     <div className='chatbox__screen'>
-                        <Chatbox movieId={movieId} movieName={movieName} username={username} hostUsername={hostUsername} isHost={isHost} />
+                        <Chatbox movieId={movieId} movieName={movieName} username={username} hostUsername={hostUsername} isHost={isHost} movieNum={movieNum} />
                     </div>
                 ) : null}
             </div>

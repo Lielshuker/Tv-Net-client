@@ -32,7 +32,6 @@ export default function ResetPassword() {
     let password_match_error = validation_key.password_match_error_text
 
     const handleSubmit = async e => {
-        debugger;
         e.preventDefault();
         if (!state.password_error_text && !state.username_error_text && !state.password_match_error_text) {
             await axios.get(`http://localhost:5000/auth/reset/${token}`, { params: { username, password: newPassword } })

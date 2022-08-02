@@ -41,9 +41,7 @@ export default function SignUp(prop) {
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
 
-
     const navigate = useNavigate();
-
 
     const handleSubmit = async (event) => {
         emailValidation()
@@ -59,6 +57,7 @@ export default function SignUp(prop) {
                     setNameError(error.response.data.msg)
                 }
             })
+        navigate('/moviesList')
     };
     function handleChangeUsername(e) {
         setUserName(e.target.value)
@@ -207,7 +206,6 @@ export default function SignUp(prop) {
                         </Box>
                     </Box>
                     <Copyright sx={{ mt: 5 }} />
-
                 </Grid>
             </Grid>
         </ThemeProvider >
