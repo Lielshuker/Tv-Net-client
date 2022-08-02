@@ -13,7 +13,7 @@ function onReady(event) {
 }
 
 
-export default function YouTubePage() { 
+export default function YouTubePage() {
     const { state } = useLocation();
     const movieId = state.movieId;
     const movieName = state.movieName;
@@ -22,7 +22,7 @@ export default function YouTubePage() {
     const isHost = state.isHost;
     const movieNum = state.movieNum
 
-        
+
     const roomName = hostUsername + movieId;
 
     const opts = {
@@ -36,7 +36,7 @@ export default function YouTubePage() {
     return (
         <div className='full__screen'>
             <div className='header'>
-                <a href='https://www.themoviedb.org/'>
+                <a href='http://localhost:3000/moviesList'>
                     <img src={logo} alt="TMDB" className='tmdbLogo'></img>
                 </a>
             </div>
@@ -55,7 +55,7 @@ export default function YouTubePage() {
 
 
     // const { state } = useLocation();
-    
+
     // if (!state.movieName) {
     //     const opts = {
     //         height: '585',
@@ -64,9 +64,9 @@ export default function YouTubePage() {
     //             autoplay: 1
     //         }
     //     };
-        
+
     //     const videoId = state.movieId;
-    
+
     //     return (
     //         <div>
     //             <YouTube videoId={videoId} opts={opts} onReady={onReady} />
@@ -86,7 +86,7 @@ export default function YouTubePage() {
     //         }
     //     };
     //     const roomName = hostUsername + movieId;
-    
+
     //     return (
     //         <div className='full__screen'>
     //             <div className='header'>
@@ -100,13 +100,13 @@ export default function YouTubePage() {
     //                 <YouTube videoId={movieId} opts={opts} onReady={onReady} />
     //                 {/* <VideoChat roomName={roomName} isHost={isHost} /> */}
     //             </div>
-                
+
     //             <div className='chatbox__screen'>
     //                 <Chatbox movieId={movieId} movieName={movieName} username={username} hostUsername={hostUsername} isHost={isHost} />
     //             </div>
     //         </div>
     //         </div>
-            
+
     //     ); 
     // } 
 }

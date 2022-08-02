@@ -44,20 +44,25 @@ export default function SignUp(prop) {
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
-        emailValidation()
-        passwordValidation()
-        event.preventDefault();
-        await axios.post(`http://localhost:5000/users/`, { first_name, last_name, email, username, password })
-            .then(function (response) { navigate('/profile'); })
-            .catch((error) => {
-                if (error.response) {
-                    console.log(error.response)
-                    console.log(error.response.data.msg)
-                    console.log(error.response.headers)
-                    setNameError(error.response.data.msg)
-                }
-            })
-        navigate('/moviesList')
+        const validEmail = emailValidation()
+        const validPassword = passwordValidation()
+        if (validEmail && validPassword) {
+            event.preventDefault();
+            await axios.post(`http://localhost:5000/users/`, { first_name, last_name, email, username, password })
+                .then(function (response) {
+                    navigate("/moviesList", { state: { username: username } })
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        console.log(error.response)
+                        console.log(error.response.data.msg)
+                        console.log(error.response.headers)
+                        setNameError(error.response.data.msg)
+                    }
+                })
+        }
+
+        // navigate('/moviesList')
     };
     function handleChangeUsername(e) {
         setUserName(e.target.value)
@@ -65,23 +70,34 @@ export default function SignUp(prop) {
     }
     function handleChangeEmail(e) {
         setEmail(e.target.value)
-        setEmailError(null)
+        const validEmail = emailValidation()
+        if (validEmail) {
+            setEmailError(null)
+        }
     }
     function handleChangePassword(e) {
         setPassword(e.target.value)
-        setPasswordError(null)
+        const validPass = passwordValidation()
+        if (validPass) {
+            setPasswordError(null)
+
+        }
     }
 
     function emailValidation() {
         if (!validator.isEmail(email)) {
             setEmailError('Invalid email, please enter anthor email')
+            return false
         }
+        return true
     }
 
     function passwordValidation() {
         if (password.length < 6) {
             setPasswordError("Your password must be at least 6 characters")
+            return false
         }
+        return true
     }
 
     return (

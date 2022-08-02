@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button'
 
 
 function Logout(props) {
@@ -21,9 +22,9 @@ function Logout(props) {
 
     return (
         <header className="App-header">
-            <button onClick={HandelLogout} href='/login'>
+            <Button onClick={HandelLogout} href='/'>
                 Logout
-            </button>
+            </Button>
         </header>
     )
 }
