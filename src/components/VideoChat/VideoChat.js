@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@material-ui/core";
+// import { Button } from "@material-ui/core";
 import VideoCall from "./VideoCall";
 
 function VideoChat(props) {
@@ -10,11 +10,11 @@ function VideoChat(props) {
     const token = props.token;
 
     const { ready, tracks, setStart, setInCall, client, start } = props;
-    
-    return(
+
+    return (
         <div className="VideoChat">
-            <VideoCall setInCall={setInCall} roomName={roomName} isHost={isHost} roomId={roomId} token={token} 
-            setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} start={start} />
+            <VideoCall setInCall={setInCall} roomName={roomName} isHost={isHost} roomId={roomId} token={token}
+                setInCall={setInCall} ready={ready} tracks={tracks} setStart={setStart} client={client} start={start} />
             {/* {inCall ? (
                 <VideoCall setInCall={setInCall} roomName={roomName} isHost={isHost} roomId={roomId} />
             ) : (

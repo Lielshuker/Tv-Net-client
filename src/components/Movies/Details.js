@@ -32,7 +32,7 @@ export const Details = (props) => {
     const [show, setShow] = useState(false);
     const [selectedOption, setSelectedOption] = useState("none");
     const [showError, setShowError] = useState(false);
-  
+
 
     function handleSubmitWatchNow(videoId, movieNum) {
         var today = new Date();
@@ -188,28 +188,28 @@ export const Details = (props) => {
                                 }}> Host a room </Button>
                                 <Button onClick={() => setShow(!show)}> Enter existing room </Button>
 
-                                { show ? 
-                                <div className='enter_room' type>
-                                    <input value={roomName}
-                                    onChange={(e) => setRoomName(e.target.value)}
-                                    placeholder="Enter hosts username"
-                                    type="text" />
-                                    <Button onClick={() => {
-                                        const id = extractVideoID(props.movieURL);
-                                        if (ChechIfExists(id, roomName)) {
-                                            EnterRoom(id, props.name, props.username, roomName, props.movieNum);
-                                        } else {
-                                            setShowError(true);
+                                {show ?
+                                    <div className='enter_room' type>
+                                        <input value={roomName}
+                                            onChange={(e) => setRoomName(e.target.value)}
+                                            placeholder="Enter hosts username"
+                                            type="text" />
+                                        <Button onClick={() => {
+                                            const id = extractVideoID(props.movieURL);
+                                            if (ChechIfExists(id, roomName)) {
+                                                EnterRoom(id, props.name, props.username, roomName, props.movieNum);
+                                            } else {
+                                                setShowError(true);
+                                            }
+                                        }} type="submit">Enter room</Button>
+                                        {
+                                            showError && <h3 >Room doesn't exist!</h3>
                                         }
-                                    }} type="submit">Enter room</Button>
-                                    {
-                                        showError && <h3 >Room doesn't exist!</h3>
-                                    }
-                                    
-                                </div> : null}
-                            </div>                         
-                    }                     
-                    <div style={{paddingBottom: '20px'}}></div>
+
+                                    </div> : null}
+                            </div>
+                    }
+                    <div style={{ paddingBottom: '20px' }}></div>
                 </div>
 
                 <div>
