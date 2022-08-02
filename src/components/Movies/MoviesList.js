@@ -56,9 +56,17 @@ export default function MoviesList (props) {
     return (
         <div>   
             <div className='header'>
-                <a href="localhost:3000/moviesList">
+                <a href="https://www.themoviedb.org/">
                     <img src={logo} alt="TMDB" className='tmdbLogo'></img>
                     </a> 
+                {/* {
+                    movieList.length > 0 ? (
+                        <h1 className='headerMovieTitle'> Trending Movies & Series  </h1>
+                        )
+                    : (
+                        <h1 className='headerMovieTitle'> Loading... </h1>
+                    )
+                } */}
             </div>
             {
                 movieList.length > 0 ? 
@@ -116,6 +124,7 @@ export default function MoviesList (props) {
                         
                     </div>
                 : <Details bgImage='' moviePoster='' movieRD='Release Date' movieTitle= 'Movie Title' />
+
             }
         </div>
     )
